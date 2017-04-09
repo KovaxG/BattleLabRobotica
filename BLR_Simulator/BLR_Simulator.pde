@@ -5,6 +5,7 @@
 
 // Global variables
 Robot optimus; // The main robot
+Robot dummy; // Enemy robot
 Ring ring; // The ring 
 
 // The setup function to initialize main objects
@@ -15,7 +16,11 @@ void setup() {
   
   // Initialize objects
   ring = new Ring(width/2, height/2);
-  optimus = new Robot(width/2, height/2, ring);
+  optimus = new Robot(ring);
+  dummy = new Robot(width/2 + 100, height/2 - 100, ring, PI/2);
+  dummy.hideSensors = true;
+  
+  optimus.setEnemy(dummy);
 }
 
 // Draw the objects to the screen
@@ -30,6 +35,7 @@ void draw() {
   // Invoke draw methods of objects
   ring.draw();
   optimus.draw();
+  dummy.draw();
 }
 
 // The rest of what is here deals with input handling --------+
@@ -48,6 +54,7 @@ void updateStuff() {
   else if (turnRight) optimus.angacc = 20;
   
   optimus.update();
+  dummy.update();
 }
 
 boolean turnRight = false;

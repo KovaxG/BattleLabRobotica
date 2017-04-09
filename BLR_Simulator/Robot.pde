@@ -14,9 +14,12 @@ public class Robot extends Entity {
   private float speed = 0; // [m/s]
   private float accel = 0; // [(m/s)/s]
   
-  private float angle = -PI/2;  // [rad]
-  private float angvel = 0;     // [rad/s]
-  private float angacc = 0;     // [(rad/s)/s]
+  private float angle  = 0; // [rad]
+  private float angvel = 0; // [rad/s]
+  private float angacc = 0; // [(rad/s)/s]
+  
+  public boolean hideSensors = false;
+  private Robot enemy = null;
   
   // The four line sensors
   private LineSensor ls1;
@@ -24,15 +27,33 @@ public class Robot extends Entity {
   private LineSensor ls3;
   private LineSensor ls4;
   
+  // Distance sensor
+  private DistanceSensor ds1;
   
-  public Robot(float x, float y, Ring r) {
+  public Robot(float x, float y, Ring r, float startingAngle) {
     this.x = x;
     this.y = y;
+    this.angle = startingAngle;
     
     ls1 = new LineSensor( 25, -25, r);
     ls2 = new LineSensor(-25, -25, r);
     ls3 = new LineSensor( 25,  25, r);
     ls4 = new LineSensor(-25,  25, r);
+    
+    ds1 = new DistanceSensor(25, 0, null);
+  }
+  public Robot(float x, float y, Ring r) {
+    this(x, y, r, -PI/2);
+  }
+  public Robot(Ring r) {
+    this(r.x(), r.y(), r, -PI/2);
+  }
+  public Robot(Ring r, float startingAngle) {
+    this(r.x(), r.y(), r, startingAngle);
+  }
+  
+  public void setEnemy(Robot rob) {
+    ds1.setRobot(rob);
   }
   
   /* update - Update internal states and the states of the sensors.
@@ -53,11 +74,12 @@ public class Robot extends Entity {
     y += speed * sin(angle);
     
     // Update sensors
-    ls1.update(x , y, angle);
-    ls2.update(x , y, angle);
-    ls3.update(x , y, angle);
-    ls4.update(x , y, angle);
+    ls1.update(x, y, angle);
+    ls2.update(x, y, angle);
+    ls3.update(x, y, angle);
+    ls4.update(x, y, angle);
     
+    ds1.update(x, y, angle);
   }
   
   /* draw - draw the robot to the screen.
@@ -86,10 +108,14 @@ public class Robot extends Entity {
     rect(offset, offset, realSize, realSize);
     
     // Draw the components of the robot
-    ls1.draw();
-    ls2.draw();
-    ls3.draw();
-    ls4.draw();
+    if (!hideSensors) {
+      ls1.draw();
+      ls2.draw();
+      ls3.draw();
+      ls4.draw();
+    
+      ds1.draw();
+    }
     
     // Write text to the front of the robot
     fill(255);
@@ -112,4 +138,4 @@ public class Robot extends Entity {
   public String toString() {
     return String.format("x=%f, y=%f, v=%f, a=%f, av=%f, aa=%f", x, y, speed, accel, angvel, angacc);
   }
-} // End of Class Robot
+} // End of Class

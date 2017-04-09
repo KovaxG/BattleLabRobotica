@@ -24,7 +24,7 @@ public class LineSensor extends Sensor {
     stroke(255); // The color of the contour
     // The fill of the sensor depends whether or not it is detecting someting
     if (on) fill(255, 0, 0); // Red if on
-    else    fill(0); // Black if off
+    else    fill(0, 255, 0); // Green if off
     
     // Perform position calculations
     float realSize = size * scale;
