@@ -1,11 +1,15 @@
 /*
  * "Main Class" of the program. Everything starts here.
  * 2017.04.09 - Kovacs Gyorgy
+ *
+ * If you want to control the robot manually, set the value 
+ * of the program object in the setup method to null!!
  */
 
 // Global variables
 Robot optimus; // The main robot
 Ring ring; // The ring 
+Program program;
 
 // The setup function to initialize main objects
 void setup() {
@@ -16,6 +20,10 @@ void setup() {
   // Initialize objects
   ring = new Ring(width/2, height/2);
   optimus = new Robot(width/2, height/2, ring);
+  
+  // Program related initializations
+  program = new TestProgram(optimus); // Set to null if you want to control the robot manually
+  if (program != null) program.setup();
 }
 
 // Draw the objects to the screen
@@ -39,13 +47,20 @@ void draw() {
 
 void updateStuff() {
   
-  optimus.accel = 0;
-  if (forward) optimus.accel = 20;
-  else if (backward) optimus.accel = -20;
-  
-  optimus.angacc = 0;
-  if (turnLeft) optimus.angacc = -20;
-  else if (turnRight) optimus.angacc = 20;
+  if (program != null) {
+    // Control via program
+    program.loop();
+  }
+  else {
+    // Manual Control
+    optimus.accel = 0;
+    if (forward) optimus.accel = 20;
+    else if (backward) optimus.accel = -20;
+    
+    optimus.angacc = 0;
+    if (turnLeft) optimus.angacc = -20;
+    else if (turnRight) optimus.angacc = 20;
+  }
   
   optimus.update();
 }

@@ -10,6 +10,8 @@ public class Robot extends Entity {
   private float y; // Absolute vertical position (relative to upper left corner)
   
   private float mass = 3;  // [kg] Mass of the robot, used in the motion laws
+  public float rWheelForce = 0; // [N]
+  public float lWheelForce = 0; // [N]
   
   private float speed = 0; // [m/s]
   private float accel = 0; // [(m/s)/s]
@@ -40,6 +42,16 @@ public class Robot extends Entity {
    *        the robot itself, then each sensor updates itself using the new states of the robot.
    */
   public void update() {
+    // Calculate Acceleration
+    float forwardForce = (rWheelForce + lWheelForce); // F = |F1| + |F2|
+    accel = forwardForce / mass; // F = m * a => a = F / m
+    accel = 10 * accel; // To balance the roation with the forward acceleration
+    
+    // Calculate Rotation acceleration
+    float rotatingForce = rWheelForce - lWheelForce; // F = |F1| - |F2|
+    float rotatingTorque = rotatingForce * size/2; // T = F * l
+    angacc = rotatingTorque / mass; // T = m * a => a = T / m
+    
     // Apply friction
     speed -= speed * 0.1;
     angvel -= angvel * 0.1;
