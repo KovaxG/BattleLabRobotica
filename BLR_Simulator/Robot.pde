@@ -18,8 +18,8 @@ public class Robot extends Entity {
   private float angvel = 0; // [rad/s]
   private float angacc = 0; // [(rad/s)/s]
   
-  public boolean hideSensors = false;
-  private Robot enemy = null;
+  public boolean hideSensors = false; // Draw only the frame of the robot and hide the rest
+  public boolean mouseFollower = false; // You can move the robot by the mouse. Disables update.
   
   // The four line sensors
   private LineSensor ls1;
@@ -35,12 +35,14 @@ public class Robot extends Entity {
     this.y = y;
     this.angle = startingAngle;
     
-    ls1 = new LineSensor( 25, -25, r);
-    ls2 = new LineSensor(-25, -25, r);
-    ls3 = new LineSensor( 25,  25, r);
-    ls4 = new LineSensor(-25,  25, r);
+    float offset = 25 / 3 * scale;
     
-    ds1 = new DistanceSensor(25, 0, null);
+    ls1 = new LineSensor( offset, -offset, r);
+    ls2 = new LineSensor(-offset, -offset, r);
+    ls3 = new LineSensor( offset,  offset, r);
+    ls4 = new LineSensor(-offset,  offset, r);
+    
+    ds1 = new DistanceSensor(offset, 0, null);
   }
   public Robot(float x, float y, Ring r) {
     this(x, y, r, -PI/2);
@@ -52,6 +54,7 @@ public class Robot extends Entity {
     this(r.x(), r.y(), r, startingAngle);
   }
   
+  // This is provide a reference for the distance sensor
   public void setEnemy(Robot rob) {
     ds1.setRobot(rob);
   }
@@ -61,6 +64,13 @@ public class Robot extends Entity {
    *        the robot itself, then each sensor updates itself using the new states of the robot.
    */
   public void update() {
+    // If mousefollower then just follow the mouse
+    if (mouseFollower) {
+      x = mouseX;
+      y = mouseY;
+      return;
+    }
+    
     // Apply friction
     speed -= speed * 0.1;
     angvel -= angvel * 0.1;

@@ -29,6 +29,7 @@ public class DistanceSensor extends Sensor {
     
     // Scale the range, then draw the line
     float actualRange = range * scale; 
+    //System.out.println(distance(Px, Py, Px + actualRange, Py) + " " + actualRange);
     line(Px, Py, Px + actualRange, Py);
   }
   
@@ -44,6 +45,9 @@ public class DistanceSensor extends Sensor {
     
     // If there is a ref, check if it is in front of the sensor
     // TODO implement
-    on = true;
+    float actualRange = range * scale; 
+    System.out.println(distance(x, y, robot.x, robot.y) + " " + actualRange + " " + distance(Px, Py, Px + actualRange, Py));
+    if (distance(x, y, robot.x, robot.y) <= actualRange) on = true;
+    else on = false;
   }
 } // End of Class

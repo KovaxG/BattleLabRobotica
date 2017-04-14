@@ -9,6 +9,8 @@
 float distance(float x1, float y1, float x2, float y2) {
   
   float scalingFactor = 2 / Const.scale;
+
+  
   float normalDistance = sqrt(sqr(x1 - x2) + sqr(y1 - y2));
   
   return normalDistance * scalingFactor;

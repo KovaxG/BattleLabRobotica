@@ -19,8 +19,11 @@ void setup() {
   optimus = new Robot(ring);
   dummy = new Robot(width/2 + 100, height/2 - 100, ring, PI/2);
   dummy.hideSensors = true;
+  dummy.mouseFollower = true;
   
   optimus.setEnemy(dummy);
+  
+  
 }
 
 // Draw the objects to the screen
