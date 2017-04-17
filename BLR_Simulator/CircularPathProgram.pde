@@ -2,6 +2,9 @@
  * A simple implementation of a line sensor based control.
  * The robot moves on a circular trajectory when it detects the white line
  * in order to avoid getting out of the table
+ *
+ * Theoretical aspects can be found here: 
+ * https://chess.eecs.berkeley.edu/eecs149/documentation/differentialDrive.pdf
  * 
  * 2017.04.17 - Popescu Mihaela
  *
@@ -23,16 +26,16 @@ public class CircularPathProgram extends Program {
     // Can be added later if required
   }
 
+  boolean wait = false;
+  float linearSpeed = 1;
+
   //the part of the robot which is touching the white border
   boolean frontBorder = false; //true when at least one front sensor is true
   boolean backBorder = false;  //true when at least one back sensor is true
 
-  boolean wait = false;
-  float linearSpeed = 1;
-
   //params used to turn the robot
-  boolean turnLeft=true;   //left should be false and right should be true, but it's a temporary fix until the motors bug is fixed
-  boolean turnRight=false; 
+  boolean turnLeft = true;   //left should be false and right should be true, but it's a temporary fix until the motors bug is fixed
+  boolean turnRight = false; 
  
   void loop () {
     boolean border = digitalRead(lsPin1) || 
@@ -56,7 +59,7 @@ public class CircularPathProgram extends Program {
       moveOnCircularTrajectory(turnRight, angularSpeedDeg, radius);
     } else {
       motorControl(1, linearSpeed);
-      motorControl(1, linearSpeed);
+      motorControl(2, linearSpeed);
     }
   }
 
@@ -69,10 +72,6 @@ public class CircularPathProgram extends Program {
     } else if (digitalRead(lsPin2) || digitalRead(lsPin4)) {
       frontBorder = false;
       backBorder = true;
-    } else
-    {
-      frontBorder = false;
-      backBorder = false;
     }
   }
 
