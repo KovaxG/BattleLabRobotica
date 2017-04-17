@@ -22,7 +22,8 @@ void setup() {
   optimus = new Robot(width/2, height/2, ring);
   
   // Program related initializations
-  program = new TestProgram(optimus); // Set to null if you want to control the robot manually
+  //program = new TestProgram(optimus); 
+  program = new CircularPathProgram(optimus, 2, 60); // Set to null if you want to control the robot manually
   if (program != null) program.setup();
 }
 
