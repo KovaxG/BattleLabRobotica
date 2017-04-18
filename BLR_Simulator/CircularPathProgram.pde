@@ -34,8 +34,8 @@ public class CircularPathProgram extends Program {
   boolean backBorder = false;  //true when at least one back sensor is true
 
   //params used to turn the robot
-  boolean turnLeft = true;   //left should be false and right should be true, but it's a temporary fix until the motors bug is fixed
-  boolean turnRight = false; 
+  boolean turnLeft = false;   
+  boolean turnRight = true; 
  
   void loop () {
     boolean border = digitalRead(lsPin1) || 
@@ -54,9 +54,9 @@ public class CircularPathProgram extends Program {
     Serial.println("f:" + frontBorder + " b:" + backBorder);
 
     if (frontBorder) {
-      moveOnCircularTrajectory(turnLeft, -angularSpeedDeg, radius);
+      moveOnCircularTrajectory(turnRight, -angularSpeedDeg, radius);
     } else if (backBorder) {
-      moveOnCircularTrajectory(turnRight, angularSpeedDeg, radius);
+      moveOnCircularTrajectory(turnLeft, angularSpeedDeg, radius);
     } else {
       motorControl(1, linearSpeed);
       motorControl(2, linearSpeed);
@@ -73,33 +73,6 @@ public class CircularPathProgram extends Program {
       frontBorder = false;
       backBorder = true;
     }
-  }
-
-  public void moveOnCircularTrajectory(boolean direction, float angularSpeedDeg, float radius)
-  {
-    //method to move the robot on a circular trajectory   
-    //direction = true to turn right, and false to turn left 
-
-    float rightSpeed;
-    float leftSpeed;
-
-    //convert the angular speed (DEG/s -> RAD/s)
-    float angularSpeedRad = angularSpeedDeg/180*3.14;
-
-    //compute the linear speed for the left and the right wheel, depending on the direction
-    if (direction)
-    {
-      rightSpeed = (radius-robot.getSize()/2) * angularSpeedRad;
-      leftSpeed = (radius+robot.getSize()/2) * angularSpeedRad;
-    } else
-    {
-      rightSpeed = (radius+robot.getSize()/2) * angularSpeedRad;
-      leftSpeed = (radius-robot.getSize()/2) * angularSpeedRad;
-    }
-
-    //send the command to the two motors
-    motorControl(1, rightSpeed);
-    motorControl(2, leftSpeed);
   }
   
 } // End of Program
