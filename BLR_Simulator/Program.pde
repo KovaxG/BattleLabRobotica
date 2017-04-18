@@ -59,4 +59,30 @@ public abstract class Program {
       print(s + "\n");
     }
   } // End of Class SERIAL
+  
+  
+  //method to move the robot on a circular trajectory   
+  //direction = true to turn right, and false to turn left 
+  protected void moveOnCircularTrajectory(boolean direction, float angularSpeedDeg, float radius)
+  {
+    float rightSpeed, leftSpeed;
+
+    //convert the angular speed (DEG/s -> RAD/s)
+    float angularSpeedRad = angularSpeedDeg/180*3.14;
+
+    //compute the linear speed for the left and the right wheel, depending on the direction
+    if (direction)
+    {
+      rightSpeed = (radius-robot.getSize()/2) * angularSpeedRad;
+      leftSpeed = (radius+robot.getSize()/2) * angularSpeedRad;
+    } else
+    {
+      rightSpeed = (radius+robot.getSize()/2) * angularSpeedRad;
+      leftSpeed = (radius-robot.getSize()/2) * angularSpeedRad;
+    }
+
+    //send the command to the two motors
+    motorControl(1, rightSpeed);
+    motorControl(2, leftSpeed);
+  }
 } // End of Class Program
