@@ -21,10 +21,10 @@ public class Robot extends Entity {
   private float angacc = 0;     // [(rad/s)/s]
   
   // The four line sensors
-  private LineSensor ls1;
-  private LineSensor ls2;
-  private LineSensor ls3;
-  private LineSensor ls4;
+  private LineSensor ls1; //front left sensor 
+  private LineSensor ls2; //back left sensor
+  private LineSensor ls3; //front right sensor
+  private LineSensor ls4; //back right sensor
   
   
   public Robot(float x, float y, Ring r) {
@@ -35,6 +35,11 @@ public class Robot extends Entity {
     ls2 = new LineSensor(-25, -25, r);
     ls3 = new LineSensor( 25,  25, r);
     ls4 = new LineSensor(-25,  25, r);
+  }
+  
+  public int getSize()
+  {
+    return this.size;
   }
   
   /* update - Update internal states and the states of the sensors.
