@@ -53,7 +53,7 @@ public class Robot extends Entity {
     accel = 10 * accel; // To balance the roation with the forward acceleration
     
     // Calculate Rotation acceleration
-    float rotatingForce = rWheelForce - lWheelForce; // F = |F1| - |F2|
+    float rotatingForce = lWheelForce - rWheelForce; // F = |F1| - |F2|
     float rotatingTorque = rotatingForce * size/2; // T = F * l
     angacc = rotatingTorque / mass; // T = m * a => a = T / m
     
