@@ -23,7 +23,7 @@ void setup() {
   
   // Program related initializations
   //program = new TestProgram(optimus); 
-  program = new LineFollowerProgram(optimus, true); // Set to null if you want to control the robot manually
+  program = new SpinnerProgram(optimus, false); // Set to null if you want to control the robot manually
   if (program != null) program.setup();
 }
 

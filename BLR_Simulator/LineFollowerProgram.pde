@@ -24,10 +24,6 @@ public class LineFollowerProgram extends Program {
   boolean frontBorder = false; //true when at least one front sensor is true
   boolean backBorder = false;  //true when at least one back sensor is true
 
-  //params used to turn the robot
-  boolean turnLeft = false;   
-  boolean turnRight = true; 
-
   boolean wait = false;
   
   boolean beginning = true;
