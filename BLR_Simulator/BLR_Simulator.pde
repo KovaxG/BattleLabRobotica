@@ -10,22 +10,32 @@
 Robot optimus; // The main robot
 Ring ring; // The ring 
 Program program;
+CommandPanel panel;
+
+float WIDTH = 500;
+float HEIGHT = 500;
 
 // The setup function to initialize main objects
 void setup() {
   // Set screen size and fps
-  size(500, 500);
+  size(600, 500);
   frameRate(Const.fps);
   
   // Initialize objects
-  ring = new Ring(width/2, height/2);
-  optimus = new Robot(width/2, height/2, ring);
+  ring = new Ring((int)WIDTH/2, (int)HEIGHT/2);
+  optimus = new Robot(WIDTH/2, HEIGHT/2, ring);
+  panel = new CommandPanel(WIDTH, 0, 98, HEIGHT - 2);
   
   // Program related initializations
+
   //program = new TestProgram(optimus); 
   program = new SpinnerProgram(optimus, false); // Set to null if you want to control the robot manually
   if (program != null) program.setup();
 }
+
+ArrayList<Point> trajectory = new ArrayList<Point>();
+boolean memoriseTrajectory = false;
+
 
 // Draw the objects to the screen
 // Note - uses framerate that is set in the setup
@@ -33,12 +43,26 @@ void draw() {
   // Clear the screen
   background(0);
   
+  // Command Panel
+  panel.draw();
+  
   // Deals with input and such
   updateStuff();
   
   // Invoke draw methods of objects
   ring.draw();
   optimus.draw();
+  
+  drawTrajectory();
+}
+
+void drawTrajectory() {
+  for (int i = 0; i < trajectory.size()-1; i++) {
+    stroke(255, 0, 0);
+    line(trajectory.get(i), trajectory.get(i+1));
+  }
+  
+  System.out.println(trajectory.size());
 }
 
 // The rest of what is here deals with input handling --------+
@@ -55,15 +79,33 @@ void updateStuff() {
   else {
     // Manual Control
     optimus.accel = 0;
-    if (forward) optimus.accel = 20;
-    else if (backward) optimus.accel = -20;
+    if (forward) {
+      optimus.rWheelForce = 5;
+      optimus.lWheelForce = 5;
+    }
+    else if (backward) {
+      optimus.rWheelForce = -5;
+      optimus.lWheelForce = -5;
+    }
+    else {
+      optimus.rWheelForce = 0;
+      optimus.lWheelForce = 0;
+    }
     
-    optimus.angacc = 0;
-    if (turnLeft) optimus.angacc = -20;
-    else if (turnRight) optimus.angacc = 20;
+    if (turnLeft) {
+      optimus.lWheelForce = -5;
+      optimus.rWheelForce = 5;
+    }
+    else if (turnRight) {
+      optimus.rWheelForce = -5;
+      optimus.lWheelForce = 5;
+    }
   }
   
   optimus.update();
+  
+  Point a = new Point(optimus.x, optimus.y);
+  if (memoriseTrajectory && !trajectory.contains(a)) trajectory.add(a);
 }
 
 boolean turnRight = false;
@@ -103,4 +145,8 @@ void keyReleased() {
   case 's': backward = false; break;
   default: break;
   }
+}
+
+void mousePressed() {
+  panel.click();
 }

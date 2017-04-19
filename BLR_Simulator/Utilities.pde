@@ -26,6 +26,13 @@ public class Point {
     this.x = x;
     this.y = y;
   }
+  
+  public boolean equals(Object obj) {
+    if (!(obj instanceof Object)) return false;
+    Point that = (Point)obj; 
+    
+    return (that.x == this.x) && (that.y == this.y);
+  }
 } // End of Class
 
 // roatatePoint - rotates the point by a given angle
@@ -34,4 +41,9 @@ public class Point {
    float ny = x * sin(angle) + y *  cos(angle);
    
    return new Point(nx, ny);
+ }
+ 
+ // Call draw Line one two points rather than four floats
+ void line(Point a, Point b) {
+   line(a.x, a.y, b.x, b.y);
  }
