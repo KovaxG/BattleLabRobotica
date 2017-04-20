@@ -8,6 +8,7 @@
 
 // Global variables
 Robot optimus; // The main robot
+Robot dummy; // Enemy robot
 Ring ring; // The ring 
 Program program;
 CommandPanel panel;
@@ -25,13 +26,16 @@ void setup() {
   ring = new Ring((int)WIDTH/2, (int)HEIGHT/2);
   optimus = new Robot(WIDTH/2, HEIGHT/2, ring);
   panel = new CommandPanel(WIDTH, 0, 98, HEIGHT - 2);
+  dummy = new Robot(WIDTH/2 + 100, HEIGHT/2 - 100, ring, PI/2);
+  dummy.hideSensors = true;
+  dummy.mouseFollower = true;
+  optimus.setEnemy(dummy);
   
   // Program related initializations
 
   //program = new TestProgram(optimus); 
   program = new LineFollowerProgram(optimus, true); // Set to null if you want to control the robot manually
-
-  if (program != null) program.setup();
+  if (program != null) program.setup();  
 }
 
 ArrayList<Point> trajectory = new ArrayList<Point>();
@@ -53,6 +57,7 @@ void draw() {
   // Invoke draw methods of objects
   ring.draw();
   optimus.draw();
+  dummy.draw();
   
   drawTrajectory();
 }
@@ -104,6 +109,7 @@ void updateStuff() {
   }
   
   optimus.update();
+  dummy.update();
   
   Point a = new Point(optimus.x, optimus.y);
   if (memoriseTrajectory && !trajectory.contains(a)) trajectory.add(a);
