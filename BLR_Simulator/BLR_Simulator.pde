@@ -13,8 +13,8 @@ Ring ring; // The ring
 Program program;
 CommandPanel panel;
 
-int WIDTH = 500;
-int HEIGHT = 500;
+float WIDTH = 500;
+float HEIGHT = 500;
 
 // The setup function to initialize main objects
 void setup() {
@@ -22,39 +22,21 @@ void setup() {
   size(600, 500);
   frameRate(Const.fps);
   
-  // Initialize objects
-<<<<<<< HEAD
-  ring = new Ring(WIDTH/2, HEIGHT/2);
-  optimus = new Robot(ring);
-  panel = new CommandPanel(WIDTH, 0, 98, HEIGHT - 2);
-  
-  // Initialize Enemy Robot
-  dummy = new Robot(width/2 + 100, height/2 - 100, ring, PI/2);
-  dummy.hideSensors = true;
-  dummy.mouseFollower = true;
-  
-  optimus.setEnemy(dummy);
-=======
+  // Initialize Objects
   ring = new Ring((int)WIDTH/2, (int)HEIGHT/2);
   optimus = new Robot(WIDTH/2, HEIGHT/2, ring);
   panel = new CommandPanel(WIDTH, 0, 98, HEIGHT - 2);
+  
+  // Initialize Enemy
   dummy = new Robot(WIDTH/2 + 100, HEIGHT/2 - 100, ring, PI/2);
   dummy.hideSensors = true;
   dummy.mouseFollower = true;
   optimus.setEnemy(dummy);
-  
-  // Program related initializations
->>>>>>> 1a4319c3de2d18e5ea124865e95a164c5c4d343f
 
   // Program related initializations
   //program = new TestProgram(optimus); 
-<<<<<<< HEAD
-  //program = new SpinnerProgram(optimus, false); // Set to null if you want to control the robot manually
-  if (program != null) program.setup();
-=======
   program = new LineFollowerProgram(optimus, true); // Set to null if you want to control the robot manually
   if (program != null) program.setup();  
->>>>>>> 1a4319c3de2d18e5ea124865e95a164c5c4d343f
 }
 
 ArrayList<Point> trajectory = new ArrayList<Point>();
@@ -77,10 +59,6 @@ void draw() {
   ring.draw();
   optimus.draw();
   dummy.draw();
-<<<<<<< HEAD
-=======
-  
->>>>>>> 1a4319c3de2d18e5ea124865e95a164c5c4d343f
   drawTrajectory();
 }
 
@@ -89,12 +67,6 @@ void drawTrajectory() {
     stroke(255, 0, 0);
     line(trajectory.get(i), trajectory.get(i+1));
   }
-  
-<<<<<<< HEAD
-  //System.out.println(trajectory.size());
-=======
-  System.out.println(trajectory.size());
->>>>>>> 1a4319c3de2d18e5ea124865e95a164c5c4d343f
 }
 
 // The rest of what is here deals with input handling --------+
