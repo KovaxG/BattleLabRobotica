@@ -18,7 +18,7 @@ public class Ring extends Entity {
   // Note - scaling included
   public void draw() {
     // Set the style of the circle
-    strokeWeight(10); // Set the width of the circle line
+    strokeWeight(10 / 3 * scale); // Set the width of the circle line
     stroke(255); // Set the color of the circle line (255 == white)
     fill(0); // Set the fill of the circle (0 == black)
     

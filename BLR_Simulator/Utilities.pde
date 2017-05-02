@@ -9,9 +9,17 @@
 float distance(float x1, float y1, float x2, float y2) {
   
   float scalingFactor = 2 / Const.scale;
+
+  
   float normalDistance = sqrt(sqr(x1 - x2) + sqr(y1 - y2));
   
-  return normalDistance * scalingFactor;
+  return normalDistance;
+}
+float distance(float x1, float y1, Point p2) {
+  return distance(x1, y1, p2.x, p2.y);
+}
+float distance(Point a, Point b) {
+  return distance(a.x, a.y, b.x, b.y);
 }
 
 // sqr - Returns the square of a float
@@ -33,6 +41,10 @@ public class Point {
     
     return (that.x == this.x) && (that.y == this.y);
   }
+  
+  public String toString() {
+    return String.format("(%.4f, %.4f)", this.x, this.y);
+  }
 } // End of Class
 
 // roatatePoint - rotates the point by a given angle
@@ -42,8 +54,21 @@ public class Point {
    
    return new Point(nx, ny);
  }
+ Point rotatePoint(Point a, float angle) {
+   return rotatePoint(a.x, a.y, angle);
+ }
+ 
+ // translatePoint - translates a point by a given offset in x and y
+ Point translatePoint (Point a, float dx, float dy) {
+   return new Point(a.x + dx, a.y + dy);
+ }
  
  // Call draw Line one two points rather than four floats
  void line(Point a, Point b) {
    line(a.x, a.y, b.x, b.y);
+ }
+ 
+ // Call rect on a point rather than two floats
+ void rect(Point a, float w, float h) {
+   rect(a.x, a.y, w, h);
  }

@@ -8,12 +8,9 @@
 
 public class LineFollowerProgram extends Program {
 
-  private boolean clockwiseDirection; //set to true if you want to turn the robot CLOCKWISE on the table
+  private boolean clockwiseDirection = true; //set to true if you want to turn the robot CLOCKWISE on the table
 
-  public LineFollowerProgram (Robot r, boolean clockwiseDirection) {
-    super(r);
-    this.clockwiseDirection = clockwiseDirection;
-  }
+  public LineFollowerProgram (Robot r) {super(r);}
 
   void setup() {
     // No need to set pinModes and stuff

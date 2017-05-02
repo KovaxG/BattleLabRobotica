@@ -1,18 +1,20 @@
 public class Button {
-  public float x;
-  public float y;
-  public float width;
-  public float height;
-  public String _text;
+  private float x;
+  private float y;
+  private float width;
+  private float height;
+  private String _text;
+  private Behavior behavior;
   
-  public boolean active = false;
+  private boolean active = false;
   
-  public Button(float x, float y, float width, float height, String txt) {
+  public Button(float x, float y, float width, float height, String txt, Behavior beh) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
     this._text = txt;
+    this.behavior = beh;
   }
   
   public void draw() {
@@ -39,13 +41,17 @@ public class Button {
     if (mousedOver()) {
       if (active) {
         active = false;
-        memoriseTrajectory = false;
-        trajectory.clear();
+        behavior.deActive();
       }
       else {
         active = true;
-        memoriseTrajectory = true;
+        behavior.onActive();
       }
     }
   }
+}
+
+public interface Behavior {
+  void onActive();
+  void deActive();
 }

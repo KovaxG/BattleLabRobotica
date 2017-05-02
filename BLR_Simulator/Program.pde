@@ -41,6 +41,12 @@ public abstract class Program {
     return value;
   }
   
+  // If you want to see if there is a robot, you can use this
+  // Returns a value between 0 and 1023
+  protected int analogRead(int pin) {
+    return robot.distanceSensors.get(pin).value;
+  }
+  
   // If you want to set the speed and the direction of a motor, you can do it
   // using this method
   protected void motorControl(int nr, float speed) {

@@ -33,6 +33,6 @@ public class EmptyProgram extends Program {
     // NOTE: Speed can be negative, to move backward
     
     motorControl(2, 5); // Rotate right motor with 5 speed
-    
+
   }
 } // End of Program

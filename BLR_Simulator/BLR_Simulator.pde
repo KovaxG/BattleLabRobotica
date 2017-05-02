@@ -8,9 +8,11 @@
 
 // Global variables
 Robot optimus; // The main robot
+Robot dummy; // Enemy robot
 Ring ring; // The ring 
 Program program;
 CommandPanel panel;
+boolean SWITCH = false;
 
 float WIDTH = 500;
 float HEIGHT = 500;
@@ -21,16 +23,22 @@ void setup() {
   size(600, 500);
   frameRate(Const.fps);
   
-  // Initialize objects
+  // Initialize Objects
   ring = new Ring((int)WIDTH/2, (int)HEIGHT/2);
   optimus = new Robot(WIDTH/2, HEIGHT/2, ring);
   panel = new CommandPanel(WIDTH, 0, 98, HEIGHT - 2);
   
-  // Program related initializations
+  // Initialize Enemy
+  dummy = new Robot(1000, 1000, ring, PI/2);
+  dummy.hideSensors = true;
+  dummy.mouseFollower = false;
+  optimus.setEnemy(dummy);
 
+  // Program related initializations
   //program = new TestProgram(optimus); 
-  program = new SpinnerProgram(optimus, false); // Set to null if you want to control the robot manually
-  if (program != null) program.setup();
+  //program = new LineFollowerProgram(optimus); // Set to null if you want to control the robot manually
+  program = new EmptyProgram(optimus);
+  if (program != null) program.setup();  
 }
 
 ArrayList<Point> trajectory = new ArrayList<Point>();
@@ -52,7 +60,7 @@ void draw() {
   // Invoke draw methods of objects
   ring.draw();
   optimus.draw();
-  
+  dummy.draw();
   drawTrajectory();
 }
 
@@ -61,8 +69,6 @@ void drawTrajectory() {
     stroke(255, 0, 0);
     line(trajectory.get(i), trajectory.get(i+1));
   }
-  
-  System.out.println(trajectory.size());
 }
 
 // The rest of what is here deals with input handling --------+
@@ -103,7 +109,9 @@ void updateStuff() {
   }
   
   optimus.update();
+  dummy.update();
   
+  // Memorise Trajectory
   Point a = new Point(optimus.x, optimus.y);
   if (memoriseTrajectory && !trajectory.contains(a)) trajectory.add(a);
 }
