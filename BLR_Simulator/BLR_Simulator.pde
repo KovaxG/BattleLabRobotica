@@ -23,6 +23,7 @@ void setup() {
   frameRate(Const.fps);
   
   // Initialize objects
+<<<<<<< HEAD
   ring = new Ring(WIDTH/2, HEIGHT/2);
   optimus = new Robot(ring);
   panel = new CommandPanel(WIDTH, 0, 98, HEIGHT - 2);
@@ -33,11 +34,27 @@ void setup() {
   dummy.mouseFollower = true;
   
   optimus.setEnemy(dummy);
+=======
+  ring = new Ring((int)WIDTH/2, (int)HEIGHT/2);
+  optimus = new Robot(WIDTH/2, HEIGHT/2, ring);
+  panel = new CommandPanel(WIDTH, 0, 98, HEIGHT - 2);
+  dummy = new Robot(WIDTH/2 + 100, HEIGHT/2 - 100, ring, PI/2);
+  dummy.hideSensors = true;
+  dummy.mouseFollower = true;
+  optimus.setEnemy(dummy);
+  
+  // Program related initializations
+>>>>>>> 1a4319c3de2d18e5ea124865e95a164c5c4d343f
 
   // Program related initializations
   //program = new TestProgram(optimus); 
+<<<<<<< HEAD
   //program = new SpinnerProgram(optimus, false); // Set to null if you want to control the robot manually
   if (program != null) program.setup();
+=======
+  program = new LineFollowerProgram(optimus, true); // Set to null if you want to control the robot manually
+  if (program != null) program.setup();  
+>>>>>>> 1a4319c3de2d18e5ea124865e95a164c5c4d343f
 }
 
 ArrayList<Point> trajectory = new ArrayList<Point>();
@@ -60,6 +77,10 @@ void draw() {
   ring.draw();
   optimus.draw();
   dummy.draw();
+<<<<<<< HEAD
+=======
+  
+>>>>>>> 1a4319c3de2d18e5ea124865e95a164c5c4d343f
   drawTrajectory();
 }
 
@@ -69,7 +90,11 @@ void drawTrajectory() {
     line(trajectory.get(i), trajectory.get(i+1));
   }
   
+<<<<<<< HEAD
   //System.out.println(trajectory.size());
+=======
+  System.out.println(trajectory.size());
+>>>>>>> 1a4319c3de2d18e5ea124865e95a164c5c4d343f
 }
 
 // The rest of what is here deals with input handling --------+
