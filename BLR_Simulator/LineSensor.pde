@@ -45,8 +45,8 @@ public class LineSensor extends Sensor {
     float sy = y + rotatedPosition.y;
     
     // Declare the condition for activation
-    boolean condition =  distance(sx, sy, ring.x, ring.y) > 145;
-            condition &= distance(sx, sy, ring.x, ring.y) < 155;
+    boolean condition =  distance(sx, sy, ring.x, ring.y) > 220;
+            condition &= distance(sx, sy, ring.x, ring.y) < 230;
     
     if (condition) on = true;
     else on = false;

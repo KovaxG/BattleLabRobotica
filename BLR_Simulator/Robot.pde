@@ -10,6 +10,8 @@ public class Robot extends Entity {
   private float y; // Absolute vertical position (relative to upper left corner)
   
   private float mass = 3;  // [kg] Mass of the robot, used in the motion laws
+  public float rWheelForce = 0; // [N]
+  public float lWheelForce = 0; // [N]
   
   private float speed = 0; // [m/s]
   private float accel = 0; // [(m/s)/s]
@@ -22,13 +24,14 @@ public class Robot extends Entity {
   public boolean mouseFollower = false; // You can move the robot by the mouse. Disables update.
   
   // The four line sensors
-  private LineSensor ls1;
-  private LineSensor ls2;
-  private LineSensor ls3;
-  private LineSensor ls4;
+  private LineSensor ls1; //front left sensor 
+  private LineSensor ls2; //back left sensor
+  private LineSensor ls3; //front right sensor
+  private LineSensor ls4; //back right sensor
   
   // Distance sensor
   private DistanceSensor ds1;
+  private DistanceSensor ds2;
   
   public Robot(float x, float y, Ring r, float startingAngle) {
     this.x = x;
@@ -42,7 +45,8 @@ public class Robot extends Entity {
     ls3 = new LineSensor( offset,  offset, r);
     ls4 = new LineSensor(-offset,  offset, r);
     
-    ds1 = new DistanceSensor(offset, 0, null);
+    ds1 = new DistanceSensor(offset, 10, null);
+    ds2 = new DistanceSensor(offset, -10, null);
   }
   public Robot(float x, float y, Ring r) {
     this(x, y, r, -PI/2);
@@ -57,6 +61,12 @@ public class Robot extends Entity {
   // This is provide a reference for the distance sensor
   public void setEnemy(Robot rob) {
     ds1.setRobot(rob);
+    ds2.setRobot(rob);
+  }
+  
+  public int getSize()
+  {
+    return this.size;
   }
   
   /* update - Update internal states and the states of the sensors.
@@ -70,6 +80,16 @@ public class Robot extends Entity {
       y = mouseY;
       return;
     }
+    
+    // Calculate Acceleration
+    float forwardForce = (rWheelForce + lWheelForce); // F = |F1| + |F2|
+    accel = forwardForce / mass; // F = m * a => a = F / m
+    accel = 10 * accel; // To balance the roation with the forward acceleration
+    
+    // Calculate Rotation acceleration
+    float rotatingForce = lWheelForce - rWheelForce; // F = |F1| - |F2|
+    float rotatingTorque = rotatingForce * size/2; // T = F * l
+    angacc = rotatingTorque / mass; // T = m * a => a = T / m
     
     // Apply friction
     speed -= speed * 0.1;
@@ -90,6 +110,7 @@ public class Robot extends Entity {
     ls4.update(x, y, angle);
     
     ds1.update(x, y, angle);
+    //ds2.update(x, y, angle);
   }
   
   /* draw - draw the robot to the screen.
@@ -125,6 +146,7 @@ public class Robot extends Entity {
       ls4.draw();
     
       ds1.draw();
+      ds2.draw();
     }
     
     // Write text to the front of the robot

@@ -46,8 +46,17 @@ public class DistanceSensor extends Sensor {
     // If there is a ref, check if it is in front of the sensor
     // TODO implement
     float actualRange = range * scale; 
-    System.out.println(distance(x, y, robot.x, robot.y) + " " + actualRange + " " + distance(Px, Py, Px + actualRange, Py));
-    if (distance(x, y, robot.x, robot.y) <= actualRange) on = true;
+    Point rotatedPosition = rotatePoint(Px, Py, angle);
+    float sx = x + rotatedPosition.x;
+    float sy = y + rotatedPosition.y;
+    
+    Point robotPos = new Point(robot.x, robot.y);
+    float distanceFromSensor = distance(sx, sy, robotPos);
+    float dx = abs(sx - robotPos.x); 
+    float a = asin(dx / distanceFromSensor); // Depends in which quarter circle the robot is
+    System.out.println(degrees(a));
+    
+    if (distanceFromSensor <= actualRange) on = true;
     else on = false;
   }
 } // End of Class
