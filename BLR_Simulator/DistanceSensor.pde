@@ -6,10 +6,14 @@ public class DistanceSensor extends Sensor {
 
   private float range = 50; // [cm] The sensor can only see the enemy robot when is closer than this distance (scaled)
   private Robot robot; // The enemy robot
+  private float angle;
   
-  public DistanceSensor(float Px, float Py, Robot robot) {
+  public int value = 1023; // The value read by the sensor
+  
+  public DistanceSensor(float Px, float Py, float angle, Robot robot) {
     super(Px, Py);
     this.robot = robot;
+    this.angle = angle;
   }
   
   // setRobot - Provide reference of the enemy robot, so that the sensor may detect it
@@ -29,8 +33,9 @@ public class DistanceSensor extends Sensor {
     
     // Scale the range, then draw the line
     float actualRange = range * scale; 
-    //System.out.println(distance(Px, Py, Px + actualRange, Py) + " " + actualRange);
+    rotate(angle);
     line(Px, Py, Px + actualRange, Py);
+    rotate(-angle);
   }
   
   /* update - update the state of the sensor
@@ -44,19 +49,38 @@ public class DistanceSensor extends Sensor {
     }
     
     // If there is a ref, check if it is in front of the sensor
-    // TODO implement
     float actualRange = range * scale; 
-    Point rotatedPosition = rotatePoint(Px, Py, angle);
+    Point rotatedPosition = rotatePoint(Px, Py, angle + this.angle);
     float sx = x + rotatedPosition.x;
     float sy = y + rotatedPosition.y;
     
-    Point robotPos = new Point(robot.x, robot.y);
-    float distanceFromSensor = distance(sx, sy, robotPos);
-    float dx = abs(sx - robotPos.x); 
-    float a = asin(dx / distanceFromSensor); // Depends in which quarter circle the robot is
-    System.out.println(degrees(a));
+    Point rotatedEndPoint = rotatePoint(Px + actualRange, Py, angle + this.angle);
+    float bx = x + rotatedEndPoint.x;
+    float by = y + rotatedEndPoint.y;
     
-    if (distanceFromSensor <= actualRange) on = true;
-    else on = false;
+    Point robotPos = new Point(robot.x, robot.y);
+    Point A = new Point(sx, sy);
+    Point B = new Point(bx, by);
+    Point C = robotPos;
+    
+    float a = distance(B, C);
+    float b = distance(C, A);
+    float c = distance(B, A);
+    
+    float p = (a + b + c) / 2;
+    float T = sqrt(p * (p - a) * (p - b) * (p - c));
+    float h = 2 * T / c;
+    
+    float distanceFromSensor = distance(C, A);
+    float sideDistance = h;
+    
+    if (distanceFromSensor <= actualRange + 10 * scale && sideDistance <= 10 * scale && distance(B, C) <= c) {
+      on = true;
+      value = (int)map(0, 1023, 0, actualRange, distanceFromSensor);
+    }
+    else{
+      on = false;
+      value = 1023;
+    }
   }
 } // End of Class

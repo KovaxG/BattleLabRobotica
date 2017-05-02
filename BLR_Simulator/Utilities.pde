@@ -18,6 +18,9 @@ float distance(float x1, float y1, float x2, float y2) {
 float distance(float x1, float y1, Point p2) {
   return distance(x1, y1, p2.x, p2.y);
 }
+float distance(Point a, Point b) {
+  return distance(a.x, a.y, b.x, b.y);
+}
 
 // sqr - Returns the square of a float
 float sqr(float a) {return a * a;}
@@ -63,4 +66,9 @@ public class Point {
  // Call draw Line one two points rather than four floats
  void line(Point a, Point b) {
    line(a.x, a.y, b.x, b.y);
+ }
+ 
+ // Call rect on a point rather than two floats
+ void rect(Point a, float w, float h) {
+   rect(a.x, a.y, w, h);
  }

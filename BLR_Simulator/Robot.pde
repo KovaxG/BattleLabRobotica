@@ -6,8 +6,8 @@
 public class Robot extends Entity {
   
   private int size = 20; // [cm] size of the robot in cm (width and length)
-  private float x; // Absolute horizontal position (relative to upper left corner)
-  private float y; // Absolute vertical position (relative to upper left corner)
+  public float x; // Absolute horizontal position (relative to upper left corner)
+  public float y; // Absolute vertical position (relative to upper left corner)
   
   private float mass = 3;  // [kg] Mass of the robot, used in the motion laws
   public float rWheelForce = 0; // [N]
@@ -29,9 +29,9 @@ public class Robot extends Entity {
   private LineSensor ls3; //front right sensor
   private LineSensor ls4; //back right sensor
   
-  // Distance sensor
-  private DistanceSensor ds1;
-  private DistanceSensor ds2;
+  // Distance sensors
+  // SHOULD NEVER BE NULL!
+  public ArrayList<DistanceSensor> distanceSensors = new ArrayList<DistanceSensor>();
   
   public Robot(float x, float y, Ring r, float startingAngle) {
     this.x = x;
@@ -45,8 +45,19 @@ public class Robot extends Entity {
     ls3 = new LineSensor( offset,  offset, r);
     ls4 = new LineSensor(-offset,  offset, r);
     
-    ds1 = new DistanceSensor(offset, 10, null);
-    ds2 = new DistanceSensor(offset, -10, null);
+    // Front Sensors
+    distanceSensors.add(new DistanceSensor(offset,  15, 0, null));
+    distanceSensors.add(new DistanceSensor(offset, -15, 0, null));
+    
+    // Right Sensors
+    distanceSensors.add(new DistanceSensor(offset, 0, PI/2, null));
+    
+    // Left Sensors
+    distanceSensors.add(new DistanceSensor(offset, 0, -PI/2, null));
+    
+    // Back Sensors
+    distanceSensors.add(new DistanceSensor(offset, 0, PI, null));
+    
   }
   public Robot(float x, float y, Ring r) {
     this(x, y, r, -PI/2);
@@ -60,13 +71,11 @@ public class Robot extends Entity {
   
   // This is provide a reference for the distance sensor
   public void setEnemy(Robot rob) {
-    ds1.setRobot(rob);
-    ds2.setRobot(rob);
+    for (DistanceSensor ds : distanceSensors) ds.setRobot(rob);
   }
   
-  public int getSize()
-  {
-    return this.size;
+  public int getSize() { 
+    return this.size; 
   }
   
   /* update - Update internal states and the states of the sensors.
@@ -109,8 +118,7 @@ public class Robot extends Entity {
     ls3.update(x, y, angle);
     ls4.update(x, y, angle);
     
-    ds1.update(x, y, angle);
-    //ds2.update(x, y, angle);
+    for (DistanceSensor ds : distanceSensors) ds.update(x, y, angle);
   }
   
   /* draw - draw the robot to the screen.
@@ -145,8 +153,7 @@ public class Robot extends Entity {
       ls3.draw();
       ls4.draw();
     
-      ds1.draw();
-      ds2.draw();
+      for (DistanceSensor ds : distanceSensors) ds.draw();
     }
     
     // Write text to the front of the robot
@@ -164,10 +171,5 @@ public class Robot extends Entity {
     // Rotate and translate back to the upper left corner of the screen
     rotate(-angle + PI/2);
     translate(-x, -y);
-  }
-  
-  // toString - Used for printing the internal states of the robot
-  public String toString() {
-    return String.format("x=%f, y=%f, v=%f, a=%f, av=%f, aa=%f", x, y, speed, accel, angvel, angacc);
   }
 } // End of Class

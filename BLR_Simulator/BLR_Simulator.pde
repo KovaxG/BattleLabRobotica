@@ -12,6 +12,7 @@ Robot dummy; // Enemy robot
 Ring ring; // The ring 
 Program program;
 CommandPanel panel;
+boolean SWITCH = false;
 
 float WIDTH = 500;
 float HEIGHT = 500;
@@ -28,14 +29,15 @@ void setup() {
   panel = new CommandPanel(WIDTH, 0, 98, HEIGHT - 2);
   
   // Initialize Enemy
-  dummy = new Robot(WIDTH/2 + 100, HEIGHT/2 - 100, ring, PI/2);
+  dummy = new Robot(1000, 1000, ring, PI/2);
   dummy.hideSensors = true;
-  dummy.mouseFollower = true;
+  dummy.mouseFollower = false;
   optimus.setEnemy(dummy);
 
   // Program related initializations
   //program = new TestProgram(optimus); 
-  program = new LineFollowerProgram(optimus, true); // Set to null if you want to control the robot manually
+  //program = new LineFollowerProgram(optimus); // Set to null if you want to control the robot manually
+  program = new EmptyProgram(optimus);
   if (program != null) program.setup();  
 }
 
