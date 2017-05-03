@@ -91,4 +91,11 @@ public abstract class Program {
     motorControl(1, rightSpeed);
     motorControl(2, leftSpeed);
   }
+
+  //method to stop the robot
+  void stopBothMotors()
+  {
+    motorControl(1, 0);
+    motorControl(2, 0);
+  }
 } // End of Class Program

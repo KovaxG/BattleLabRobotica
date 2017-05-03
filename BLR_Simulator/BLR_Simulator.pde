@@ -35,9 +35,8 @@ void setup() {
   optimus.setEnemy(dummy);
 
   // Program related initializations
-  //program = new TestProgram(optimus); 
-  //program = new LineFollowerProgram(optimus); // Set to null if you want to control the robot manually
-  program = new EmptyProgram(optimus);
+  //program = new EmptyProgram(optimus); // Set to null if you want to control the robot manually
+  program = new StateMachineProgram(optimus); 
   if (program != null) program.setup();  
 }
 
