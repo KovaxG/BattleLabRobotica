@@ -36,7 +36,7 @@ void setup() {
 
   // Program related initializations
   //program = new EmptyProgram(optimus); // Set to null if you want to control the robot manually
-  program = new StateMachineProgram(optimus); 
+  program = new FrontSensorsProgram(optimus); 
   if (program != null) program.setup();  
 }
 
