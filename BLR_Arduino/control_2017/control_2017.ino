@@ -21,6 +21,9 @@ int cmdM2 = 4;
 int SWITCH = 3;
 
 // Sensors
+#define _Sensor_1_Treshhold 180
+#define _Sensor_2_Treshhold 180
+
 int dist1 = A0; // < 180
 int dist2 = A2; // < 150
 
@@ -48,7 +51,7 @@ void setup() {
 } // End of Setup
 
 void loop() {
-  
+  performAction(determineState());
   
   #ifndef TEST
     if (digitalRead(SWITCH) == LOW) {
@@ -57,6 +60,34 @@ void loop() {
     }
   #endif
 } // End of loop
+
+int determineState() {
+  // None of the sensors are active
+  if (!leftsensor && !rightsensor) return 0;
+    
+  // At least one sensor is active
+  if (leftsensor || rightsensor) return 1; 
+    
+  //error state
+  return -1; // Theoretically impossible
+} // End of determineState
+
+void performAction(int state){
+    switch (state) {
+    case 0:
+      // Rotating Movement
+      ROTATERIGHT();
+      break;
+    case 1:
+     // Move forward
+      FORWARD();
+      break;
+    case -1:
+      // Again, this should never happen
+      STOP();
+      break;
+    }
+} // End of performAction
 
 /*
  * Change the state of the H-Bridge, thus changing the direction of the motor.
@@ -115,12 +146,12 @@ void motorCommand(int motor, int dir) {
 } // End of motorCommand
 
 
-int leftsensor() {
-  return analogRead(dist1);
+bool leftsensor() {
+  return (analogRead(dist1) > _Sensor_1_Treshhold)? true : false;
 } // End of leftsensor
 
-int rightsensor() {
-  return analogRead(dist2);  
+bool rightsensor() {
+  return (analogRead(dist2) > _Sensor_2_Treshhold)? true : false;  
 } // End of rightsensor
 
 void STOP() {
