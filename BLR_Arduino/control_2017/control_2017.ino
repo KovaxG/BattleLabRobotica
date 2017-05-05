@@ -3,7 +3,7 @@
 // Define TEST to disable the SWITCH
 // CAREFULL WITH THIS STUFF!!
 // THIS SHOULD BE COMMENTED OUT IN FINAL CODE!
-#define TEST
+//#define TEST
 
 // Constants for delays(will probably not use)
 #define _1s 1000
@@ -21,14 +21,15 @@ int cmdM2 = 4;
 int SWITCH = 3;
 
 // Sensors
-#define _Sensor_1_Treshhold 180
-#define _Sensor_2_Treshhold 180
+#define _Sensor_1_Treshhold 300
+#define _Sensor_2_Treshhold 300
 
-int dist1 = A0; // < 180
-int dist2 = A2; // < 150
+int dist1 = A5; // < 180
+int dist2 = A3; // < 150
 
 void setup() {
-
+  //Serial.begin(9600);
+  
   // H-Bridge Pins
   pinMode(cmdR1, OUTPUT);
   pinMode(cmdR2, OUTPUT);
@@ -51,7 +52,9 @@ void setup() {
 } // End of Setup
 
 void loop() {
-  performAction(determineState());
+
+  int state = determineState();
+  performAction(state);
   
   #ifndef TEST
     if (digitalRead(SWITCH) == LOW) {
@@ -62,11 +65,12 @@ void loop() {
 } // End of loop
 
 int determineState() {
+  
   // None of the sensors are active
-  if (!leftsensor && !rightsensor) return 0;
+  if (!leftsensor() && !rightsensor()) return 0;
     
   // At least one sensor is active
-  if (leftsensor || rightsensor) return 1; 
+  if (leftsensor() || rightsensor()) return 1; 
     
   //error state
   return -1; // Theoretically impossible
@@ -77,9 +81,12 @@ void performAction(int state){
     case 0:
       // Rotating Movement
       ROTATERIGHT();
+      //Serial.println("STOP");
+      //STOP();
       break;
     case 1:
      // Move forward
+    //Serial.println("GOGOGO");
       FORWARD();
       break;
     case -1:
@@ -106,7 +113,7 @@ void motorCommand(int motor, int dir) {
 
   // Direction that needs to be set to eigher 1 or -1, depending on the
   // orientation of the H-Bridge and the motor.
-  int forward = 1;
+  int forward = -1;
 
   // The Deffault H-Bridge pins to be changed
   int p1 = cmdM1;
@@ -123,35 +130,40 @@ void motorCommand(int motor, int dir) {
     // Punte Ronny
     p1 = cmdR1;
     p2 = cmdR2;
-    forward = -forward;
+    forward = forward;
   }
 
   // Switch based on the provided direction and the
   // internal direction (forward)
   if (dir == forward) {
       // Forward 
-      pinMode(p1, LOW);
-      pinMode(p2, LOW);
+      digitalWrite(p1, LOW);
+      digitalWrite(p2, LOW);
   }
   else if (dir == -forward) {
       // Backward
-      pinMode(p1, HIGH);
-      pinMode(p2, HIGH);
+      digitalWrite(p1, HIGH);
+      digitalWrite(p2, HIGH);
   }
   else {
       // Stop
-      pinMode(p1, HIGH);
-      pinMode(p2, LOW);   
+      digitalWrite(p1, HIGH);
+      digitalWrite(p2, LOW);   
   }
-} // End of motorCommand
+} // End of motorCommanD
+
 
 
 bool leftsensor() {
-  return (analogRead(dist1) > _Sensor_1_Treshhold)? true : false;
+  int val = analogRead(dist1);
+  
+  return (val > _Sensor_1_Treshhold)? true : false;
 } // End of leftsensor
 
 bool rightsensor() {
-  return (analogRead(dist2) > _Sensor_2_Treshhold)? true : false;  
+  int val = analogRead(dist2);
+  //Serial.println(val);
+  return (val > _Sensor_2_Treshhold)? true : false;  
 } // End of rightsensor
 
 void STOP() {
